@@ -23,12 +23,17 @@ let private filterPackageable proj =
 let private packageProject (config: Map<string, string>) outputDir proj =
 
     let args =
-        sprintf "pack \"%s\" -OutputDirectory \"%s\" -IncludeReferencedProjects -Properties Configuration=%s;VisualStudioVersion=%s" 
+        sprintf "pack \"%s\" -OutputDirectory \"%s\" -Symbols -IncludeReferencedProjects -Properties Configuration=%s;VisualStudioVersion=%s" 
             proj
             outputDir
             (config.get "build:configuration")
             (config.get "vs:version")
 
+    let nugetCmd = config.get "core:tools" @@ nuget
+    tracefn "NugetCommand:\n%s" (config.get "core:tools" @@ nuget)
+    tracefn "NugetParams:\n%s" args
+
+    
     let result =
         ExecProcess (fun info ->
             info.FileName <- config.get "core:tools" @@ nuget
