@@ -48,8 +48,8 @@ Target "SpecFlow:Run"      <| Specflow.run config
     ==> "Solution:Build"
     ==> "Packaging:Package"
     ==> "SpecFlow:Run"
-//    ==> "Test:Run"
-    ==> "Coverage:Run"
+    ==> "Test:Run"
+//    ==> "Coverage:Run"
     =?> ("Packaging:Push", not isLocalBuild)
     ==> "Default"
 
