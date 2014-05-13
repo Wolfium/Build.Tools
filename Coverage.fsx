@@ -4,6 +4,7 @@
 open Fake
 open Utils
 open System
+open Fake.OpenCoverHelper
 
 let run (config : Map<string, string>) _ =
     let testDlls = !! (sprintf @".\**\bin\%s\**\*.Tests.dll" (config.get "build:configuration"))
