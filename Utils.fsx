@@ -4,6 +4,7 @@ open Fake
 open System
 open Microsoft.FSharp.Collections
 
+let openCoverRunners = @"./OpenCover/tools"
 let nunitRunners = @"./NUnit.Runners/tools"
 let specFlowRunners = "./SpecFlow/tools"
 let nuget = @"./nuget/nuget.exe"
@@ -37,3 +38,16 @@ let ensureSpecFlowRunner (config : Map<string, string>) =
 
      if result <> 0 then
          failwith "SpecFlow Runner directory not found, and NuGet install failed."
+		 
+let ensureOpenCover (config : Map<string, string>) =
+  if not (directoryExists <| config.get "core:tools" @@ openCoverRunners) then
+     let args =
+         sprintf "install OpenCovers -ExcludeVersion -OutputDirectory \"%s\""
+             (config.get "core:tools")
+     let result =
+         ExecProcess (fun info ->
+             info.FileName <- config.get "core:tools" @@ nuget
+             info.Arguments <- args) (TimeSpan.FromMinutes 5.)
+
+     if result <> 0 then
+         failwith "OpenCover directory not found, and NuGet install failed."

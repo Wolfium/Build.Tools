@@ -4,6 +4,7 @@
 #load "./Versioning.fsx"
 #load "./Solution.fsx"
 #load "./Test.fsx"
+#load "./Coverage.fsx"
 #load "./Specflow.fsx"
 
 open System.IO
@@ -37,6 +38,7 @@ Target "Solution:Build"    <| Solution.build config
 Target "Solution:Clean"    <| Solution.clean config
 Target "Versioning:Update" <| Versioning.update config
 Target "Test:Run"          <| Test.run config
+Target "Coverage:Run"      <| Coverage.run config
 Target "SpecFlow:Run"      <| Specflow.run config
 
 // Build order
@@ -46,7 +48,8 @@ Target "SpecFlow:Run"      <| Specflow.run config
     ==> "Solution:Build"
     ==> "Packaging:Package"
     ==> "SpecFlow:Run"
-    ==> "Test:Run"
+//    ==> "Test:Run"
+    ==> "Coverage:Run"
     =?> ("Packaging:Push", not isLocalBuild)
     ==> "Default"
 
