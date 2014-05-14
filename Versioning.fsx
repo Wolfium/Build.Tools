@@ -40,7 +40,7 @@ let private constructInfoVersion (config: Map<string, string>) (fileVersion: Ver
     let dirInfo = directoryInfo "."
     tracefn "dirinfo.fullname: %s" dirInfo.FullName
     tracefn "dirinfo.name: %s" dirInfo.Name
-    tracefn "isLocalBuild: %b" isLocalBuild
+    tracefn "isLocalBuild, buildnumber: %b %s" isLocalBuild buildVersion
     tracefn "versioning:branch: %s" (config.get "versioning:branch")
 
     let suffix =
