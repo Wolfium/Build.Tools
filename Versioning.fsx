@@ -38,13 +38,15 @@ let private constructInfoVersion (config: Map<string, string>) (fileVersion: Ver
 //        1.0.1-beta (public)
 
     let dirInfo = directoryInfo "."
-//    tracefn "dirinfo.fullname: %s" dirInfo.FullName
-//    tracefn "dirinfo.name: %s" dirInfo.Name
+    tracefn "dirinfo.fullname: %s" dirInfo.FullName
+    tracefn "dirinfo.name: %s" dirInfo.Name
+    tracefn "isLocalBuild: %b" isLocalBuild
+    tracefn "versioning:branch: %s" (config.get "versioning:branch")
 
     let suffix =
         match isLocalBuild with
             | true -> 
-                "-" + ((dirInfo).Name |> escapeBranchName) // + "-local"
+                "-" + ((dirInfo).Name |> escapeBranchName) + "-local"
             | _ ->
                 match config.get "versioning:branch" with
                     | "master" -> 

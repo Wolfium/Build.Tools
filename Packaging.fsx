@@ -30,9 +30,8 @@ let private packageProject (config: Map<string, string>) outputDir proj =
             (config.get "vs:version")
 
     let nugetCmd = config.get "core:tools" @@ nuget
-    tracefn "NugetCommand:\n%s" (config.get "core:tools" @@ nuget)
-    tracefn "NugetParams:\n%s" args
-
+//    tracefn "NugetCommand:\n%s" (config.get "core:tools" @@ nuget)
+//    tracefn "NugetParams:\n%s" args
     
     let result =
         ExecProcess (fun info ->
