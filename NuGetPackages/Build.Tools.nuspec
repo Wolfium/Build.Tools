@@ -10,5 +10,5 @@
     <releaseNotes>@releaseNotes@</releaseNotes>
     <language />
     <tags>version msbuild fake fsharp</tags>
-  </metadata>
+</metadata>
 </package>

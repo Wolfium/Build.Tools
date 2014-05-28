@@ -1,5 +1,5 @@
 ﻿// include Fake lib
-#r @"../FAKE/FakeLib.dll"
+#r @"./FAKE/FakeLib.dll"
 
 open Fake
 open Fake.ReleaseNotesHelper
@@ -14,12 +14,12 @@ tracefn "Nuget    version: %s" release.NugetVersion
 tracefn "Latest version release notes:"
 tracefn "%A" release
 
-let packFile = !! (@"./src/**/*.nuspec") |> Seq.exactlyOne
+let packFiles = !! (@"./NuGetPackages/**/*.nuspec") // |> Seq.exactlyOne
 
 // Directories
 let outDir              = "./output/"
 let dropDir             = outDir @@ "/artifacts/"
-let packingDir          = outDir @@ "/packing"    
+let packingDir          = outDir @@ "/packages"    
 
 let nugetToolPath = "./NuGet/NuGet.exe"
 
@@ -30,33 +30,45 @@ Target "Clean" (fun _ ->
 
 Target "Package" (fun _ -> 
 
-    tracefn "pack file: %A" packFile
+//    tracefn "pack file: %A" packFile
+//    packFiles
+//        |> Seq.iter (tracefn "pack file: %A")
+
+    packFiles
+        |> Seq.iter (fun packFile -> 
+            tracefn "Preparing pack file: %A" packFile
+        
+            let packWorkDir = packingDir @@ (packFile |> fileNameWithoutExt)
+            
+            let packInfo = (ReadFileAsString >> getNuspecProperties) packFile
+
+            CleanDir (packWorkDir |> dirName)
+
+            CopyRecursive "src/Content" (packWorkDir @@ "Content") true
+                |> Log "CreatePackage-Output: "
+
+            CopyRecursive "src" (packWorkDir) true
+                |> Log "CreatePackage-Output: "
+
+            CopyRecursive "Fake" (packWorkDir @@ "Fake") true
+                |> Log "CreatePackage-Output: "
+
+            trace ""
+            trace "Release Notes:"
+            trace (release.Notes |> toLines)
+            trace ""
+
+            NuGet (fun p -> 
+                    {p with   
+                        Version = release.NugetVersion
+                        ReleaseNotes = release.Notes |> toLines
+                        WorkingDir = packWorkDir
+                        ToolPath = nugetToolPath
+                        OutputPath = dropDir
+                        })
+                packFile
+        )
     
-    let packInfo = (ReadFileAsString >> getNuspecProperties) packFile
-
-    CopyRecursive "src" (packingDir) true
-        |> Log "CreatePackage-Output: "
-
-    CopyRecursive "Fake" (packingDir @@ "Fake") true
-        |> Log "CreatePackage-Output: "
-
-    CopyRecursive "NuGet" (packingDir) true
-        |> Log "CreatePackage-Output: "
-
-    trace ""
-    trace "Release Notes:"
-    trace (release.Notes |> toLines)
-    trace ""
-
-    NuGet (fun p -> 
-            {p with   
-                Version = release.NugetVersion
-                ReleaseNotes = release.Notes |> toLines
-                WorkingDir = packingDir
-                ToolPath = nugetToolPath
-                OutputPath = dropDir
-                })
-        packFile
 )
 
 Target "Publish" (fun _ -> 
