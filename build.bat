@@ -1,0 +1,1 @@
+CALL build\build.bat %*
