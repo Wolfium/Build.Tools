@@ -44,8 +44,8 @@ Target "Package" (fun _ ->
 
             CleanDir (packWorkDir |> dirName)
 
-            CopyRecursive "src/Content" (packWorkDir @@ "Content") true
-                |> Log "CreatePackage-Output: "
+//            CopyRecursive "src/Content" (packWorkDir @@ "Content") true
+//                |> Log "CreatePackage-Output: "
 
             CopyRecursive "src" (packWorkDir) true
                 |> Log "CreatePackage-Output: "
